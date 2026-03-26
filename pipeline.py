@@ -43,5 +43,13 @@ class Pipeline:
         """Write processed data to the configured output."""
         output = self.config["output"]
         path = output["path"]
-        self.data.to_parquet(path, partition_cols=[output.get("partition_by")])
+        fmt = output.get("format", "parquet")
+
+        if fmt == "csv":
+            self.data.to_csv(path, index=False)
+        elif fmt == "parquet":
+            self.data.to_parquet(path, partition_cols=[output.get("partition_by")])
+        else:
+            raise ValueError(f"Unsupported output format: {fmt}")
+
         return path
