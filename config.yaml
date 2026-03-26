@@ -1,0 +1,23 @@
+pipeline:
+  name: analytics-pipeline
+  version: "1.0"
+
+sources:
+  - type: csv
+    path: data/input.csv
+  - type: api
+    url: https://api.example.com/data
+    auth: bearer
+
+transformations:
+  - name: clean_nulls
+    strategy: drop
+  - name: normalize
+    columns:
+      - revenue
+      - cost
+
+output:
+  format: parquet
+  path: data/output/
+  partition_by: date
